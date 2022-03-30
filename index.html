@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SRGAN GUI</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>SRGAN</h1>
+    <h3>选择一张图片：</h3>
+    <input id="file" name='file' type="file">
+    <button type="button" id="btn">确定</button>
+    <h3>结果：</h3>
+    <div class="text"></div>
+    <script>
+        $('#btn').click(function (e) {
+            var form = new FormData();
+            form.append("file", $('#file')[0].files[0]);
+            var settings = {
+                "url": "http://127.0.0.1:5000",
+                "method": "POST",
+                "timeout": 0,
+                "processData": false,
+                "mimeType": "multipart/form-data",
+                "contentType": false,
+                "data": form
+            };
+
+            $.ajax(settings).done(function (response) {
+                // 解析 json
+                let response_json = JSON.parse(response);
+                // 写入 页面
+                let img_url = 'http://127.0.0.1:5000/get_file?filename=' + response_json.data;
+                let img_tag = '<img src="' + img_url + '">';
+                $('.text').html(img_tag);
+                // console.log(response_json);
+            });
+        })
+
+    </script>
+</body>
+
+</html>
